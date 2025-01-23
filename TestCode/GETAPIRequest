@@ -1,0 +1,42 @@
+import org.testng.Assert;
+import org.junit.Test;
+import io.restassured.RestAssured;
+import io.restassured.http.Method;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
+import io.restassured.specification.RequestSpecification;
+
+public class getrequest {
+	
+	@Test
+	public void getdeatils(){
+	RestAssured.baseURI = "https://api.coindesk.com/v1/bpi/currentprice.json";
+   
+    RequestSpecification httprequest = RestAssured.given();
+    
+    Response response = httprequest.request(Method.GET);
+    
+    String responseBody = response.getBody().asString();
+    System.out.print("Response body is " + responseBody); 
+    
+    int statusCode = response.getStatusCode();
+    System.out.print("status code is" + statusCode);
+    Assert.assertEquals(statusCode, 200);
+
+    //status line verification
+    String statusLine = response.getStatusLine();
+    System.out.print(statusLine);
+    Assert.assertEquals(statusLine, "HTTP/1.1 200 OK");
+    
+    String bodyAsString = responseBody.toString();
+    
+    Assert.assertEquals(bodyAsString.contains("USD"), true);
+    Assert.assertEquals(bodyAsString.contains("GBP"), true);
+    Assert.assertEquals(bodyAsString.contains("EUR"), true);
+    Assert.assertEquals(bodyAsString.contains("British Pound Sterling"), true);
+    
+    System.out.println("The Content verified");
+     
+	}
+}
